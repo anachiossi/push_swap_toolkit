@@ -16,7 +16,14 @@ push_swap:
 	$(MAKE) -C $(PUSH_SWAP_PATH)
 	$(MAKE) -C $(PUSH_SWAP_PATH) push_swap.a
 
-input:
+# libft.a/libft.h are never built by any Makefile here -- they're given,
+# copied as-is from wherever you keep your own libft inside your push_swap
+# project (every student's libft differs just like push_swap.h does, so a
+# committed generic copy would silently link the wrong one for anyone else
+# cloning this repo).
+input: push_swap
+	cp $(PUSH_SWAP_PATH)/libft.a ps_input/lib/libft.a
+	cp $(PUSH_SWAP_PATH)/libft.h ps_input/inc/libft.h
 	$(MAKE) -C ps_input
 
 # Refreshes ps_check's lib/inc copies from your just-built push_swap project,
