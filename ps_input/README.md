@@ -5,7 +5,7 @@ disorder and size, with or without flags. Numbers can be random, from
 INT_MIN to INT_MAX (value), or start always from 0 (rank).
 
 ## Build
-
+ 
 ```
 make
 ```
@@ -16,12 +16,17 @@ make
 
 | Mode | How |
 |---|---|
-| Interactive | `./ps_input`, answers 4 questions |
+| Interactive | `./ps_input`, answers 4 questions on terminal|
 | Auto (for scripts) | `./ps_input <size> <disorder> <level> <bench> <use_rank>` |
 
-Interactive asks: size, disorder (0.0=sorted, 1.0=reversed), algorithm
-(0=adaptive 1=simple 2=medium 3=complex), bench tag (y/n), rank or value
-(r/v). Auto mode takes the same answers as arguments, in the same order,
+Interactive asks: 
+ 1. size (0 - 10000)
+ 2. disorder (0.0=sorted, 1.0=reversed)
+ 3. algorithm (0=adaptive 1=simple 2=medium 3=complex)
+ 4. bench tag (y/n)
+ 5. rank or value (0 - size -1) or (random INT_MIN to INT_MAX) (r/v)
+ 
+ Auto mode takes the same answers as arguments, in the same order,
 e.g.:
 
 ```

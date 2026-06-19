@@ -9,12 +9,13 @@ and draw a heatmap of which algorithm wins at each case (size, disorder).
 Needs `pandas`, `numpy`, `matplotlib`: `pip install -r ../requirements.txt`.
 
 ## Build & run
+From the toolkit root - builds, runs the sweep, makes all the plots
 
 ```
-make graph        # from the toolkit root - builds, runs the sweep, makes all the plots
+make graph
 ```
 
-That's the whole thing in one command. To run the steps yourself instead:
+That's the whole thing in one command. Alternatively, to run the steps yourself instead:
 
 ```
 ./ps_graph/ps_graph
@@ -33,13 +34,8 @@ average), then re-run `make graph`.
 
 | Plot | Shows |
 |---|---|
-| `ps_plot.png` | ops vs size/disorder, against the 42 subject's pass/good/excellent targets |
-| `ps_bigo.png` | fitted curve, estimating each algorithm's Big O |
+| `ps_plot.png` | ops vs size/disorder, against the 42 subject's pass/good/excellent target zones |
+| `ps_bigo.png` | estimating each algorithm's Big O |
 | `ps_adapt.png` | heatmap of which algorithm wins at each (size, disorder) |
 | `ps_audit.png` | checks if `adaptive` actually picks the best algorithm everywhere (red = it picked wrong) |
 
-## Note
-
-It never calls push_swap with `--bench` — that flag hides the op list (it
-only prints a stats summary), which is what we're counting. Op count comes
-from counting push_swap's normal printed lines instead.
