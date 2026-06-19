@@ -33,7 +33,7 @@ for size in "${SIZES[@]}"; do
 			valid=0
 
 			for run in $(seq 1 $RUNS); do
-				nums=$("$PS_GEN" "$size" "$disorder" "$algo_level" 0 1 2>/dev/null \
+				nums=$("$PS_GEN" "$size" "$disorder" "$algo_level" n r 2>/dev/null \
 					| tail -1 \
 					| sed 's|^\./push_swap ||; s/--[a-zA-Z]* //g')
 				[ -z "$nums" ] && continue

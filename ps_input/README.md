@@ -70,18 +70,21 @@ Pass all five parameters as arguments — no prompts, designed for scripting:
 ./ps_input <size> <disorder> <level> <bench> <use_rank>
 ```
 
+Each argument takes the same answer you'd type at the matching interactive
+prompt:
+
 | Argument | Type | Values | Description |
 |---|---|---|---|
 | size | int | 1 – 10000 | array size |
 | disorder | float | 0.0 – 1.0 | target disorder level |
 | level | int | 0 / 1 / 2 / 3 | algorithm: 0=adaptive 1=simple 2=medium 3=complex |
-| bench | int | 0 / 1 | 1 = print benchmark header, 0 = skip |
-| use_rank | int | 0 / 1 | 1 = output ranks [0…n-1], 0 = output random integers |
+| bench | char | y / n | y = print benchmark header, n = skip |
+| use_rank | char | r / v | r = output ranks [0…n-1], v = output random integers |
 
 Example:
 
 ```
-./ps_input 100 0.5 1 0 1
+./ps_input 340 0.5 3 n r
 ```
 
 This is the mode `ps_graph` uses internally. For each data point, ps_graph calls ps_input in a loop, takes the last line of output (the push_swap command), strips the binary name and flags with `sed`, and feeds the numbers directly to push_swap.
@@ -129,7 +132,7 @@ A sorted array of `n` random integers is generated (uniform in roughly `[-RAND_M
 
 ### rank vs value output
 
-With `use_rank = 1`, the program prints the rank array `[0…n-1]`. With `use_rank = 0`, it prints the random integer values instead. Both have the same permutation shape and therefore the same disorder. ps_graph always uses ranks because the number of push_swap operations depends only on the permutation, not the actual values.
+With `use_rank = r`, the program prints the rank array `[0…n-1]`. With `use_rank = v`, it prints the random integer values instead. Both have the same permutation shape and therefore the same disorder. ps_graph always uses ranks because the number of push_swap operations depends only on the permutation, not the actual values.
 
 ## Notes
 

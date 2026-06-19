@@ -27,13 +27,24 @@ static int	init_targets(t_gen *g)
 	return (1);
 }
 
-void	init_targets_auto(t_gen *g, char **argv)
+int	init_targets_auto(t_gen *g, char **argv)
 {
 	g->size = ft_atoi(argv[1]);
 	g->dis_target = (float)atof(argv[2]);
 	g->level = ft_atoi(argv[3]);
-	g->bench = ft_atoi(argv[4]);
-	g->use_rank = ft_atoi(argv[5]);
+	if (argv[4][0] == 'y')
+		g->bench = 1;
+	else if (argv[4][0] == 'n')
+		g->bench = 0;
+	else
+		return (0);
+	if (argv[5][0] == 'r')
+		g->use_rank = 1;
+	else if (argv[5][0] == 'v')
+		g->use_rank = 0;
+	else
+		return (0);
+	return (1);
 }
 
 int	main(int argc, char **argv)
@@ -43,7 +54,7 @@ int	main(int argc, char **argv)
 	if (argc != 1 && argc != 6)
 	{
 		ft_printf("Usage: ps_gen [size(0-10000) | disorder(0.0-1.0) "
-			"| level(0-3) | bench(0/1) | use_rank(0/1)]\n");
+			"| level(0-3) | bench(y/n) | use_rank(r/v)]\n");
 		return (1);
 	}
 	srand(time(NULL) ^ (unsigned int)getpid());
@@ -53,8 +64,12 @@ int	main(int argc, char **argv)
 		if (!init_targets(&g))
 			return (1);
 	}
-	else
-		init_targets_auto(&g, argv);
+	else if (!init_targets_auto(&g, argv))
+	{
+		ft_printf("Usage: ps_gen [size(0-10000) | disorder(0.0-1.0) "
+			"| level(0-3) | bench(y/n) | use_rank(r/v)]\n");
+		return (1);
+	}
 	if (!gen_rank(&g))
 		return (1);
 	if (!gen_value(&g))
