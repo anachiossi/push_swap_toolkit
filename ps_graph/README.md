@@ -3,8 +3,8 @@
 Executes a comprehensive sweep (runs push_swap several times for each size
 x disorder combination). Outputs a .txt with all the data. From that, some
 py scripts create graphs to compare your algorithms, calculate the
-empirical big O, audit if your adaptive mode chooses the best algorithm,
-and draw a heatmap of which algorithm wins at each case (size, disorder).
+empirical big O, and audit if your adaptive mode chooses the best
+algorithm.
 
 Needs `pandas`, `numpy`, `matplotlib`: `pip install -r ../requirements.txt`.
 
@@ -15,14 +15,19 @@ From the toolkit root - builds, runs the sweep, makes all the plots
 make graph
 ```
 
-That's the whole thing in one command. Alternatively, to run the steps yourself instead:
+That's the whole thing in one command. Everything it generates (the data
+file, the plots, `ps_bigo.txt`) lands in `out/` at the toolkit root, not in
+this folder — `ps_graph/` stays just the scripts.
+
+To run the steps yourself instead, from the toolkit root (the scripts
+write to whatever the current directory is, so `cd` into `out/` first):
 
 ```
-./ps_graph/ps_graph
-python3 ps_graph/ps_plot.py
-python3 ps_graph/ps_bigo.py
-python3 ps_graph/ps_adapt.py
-python3 ps_graph/ps_audit.py
+mkdir -p out && cd out
+../ps_graph/ps_graph
+python3 ../ps_graph/ps_plot.py
+python3 ../ps_graph/ps_bigo.py
+python3 ../ps_graph/ps_audit.py
 ```
 
 ## Changing what gets tested
@@ -30,12 +35,12 @@ python3 ps_graph/ps_audit.py
 Edit `../config.py` (sizes, disorder levels, algorithms, how many runs to
 average), then re-run `make graph`.
 
-## What each plot shows
+## What each script outputs (into `out/`)
 
-| Plot | Shows |
-|---|---|
-| `ps_plot.png` | ops vs size/disorder, against the 42 subject's pass/good/excellent target zones |
-| `ps_bigo.png` | estimating each algorithm's Big O |
-| `ps_adapt.png` | heatmap of which algorithm wins at each (size, disorder) |
-| `ps_audit.png` | checks if `adaptive` actually picks the best algorithm everywhere (red = it picked wrong) |
+| Script | Output | What it shows |
+|---|---|---|
+| `ps_graph` | `ps_graph_data.txt` | raw sweep data: size, disorder, algorithm, avg ops, avg time |
+| `ps_plot.py` | `ps_plot.png` | ops vs size/disorder, against the 42 subject's pass/good/excellent target zones |
+| `ps_bigo.py` | `ps_bigo.png` + `ps_bigo.txt` | estimated Big O per algorithm (log-log fit) |
+| `ps_audit.py` | `ps_audit.png` + terminal report | checks if `adaptive` actually picks the best algorithm everywhere (red = it picked wrong, with the algorithm it should've used) |
 

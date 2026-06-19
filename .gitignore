@@ -3,7 +3,5 @@ ps_input/ps_input
 ps_check/obj/
 ps_check/ps_check
 ps_graph/ps_graph
-ps_graph/ps_graph_data.txt
-ps_graph/*.png
-ps_graph/*.txt
+out/
 __pycache__/

@@ -30,18 +30,18 @@ check:
 graphtpl: push_swap
 	$(MAKE) -C ps_graph PUSH_SWAP=$(PUSH_SWAP) PS_GEN=$(PS_INPUT)
 
-# Runs the benchmark sweep + plots.
+# Runs the benchmark sweep + plots. Everything generated (data file, pngs,
+# bigo.txt) lands in out/, kept separate from the source/scripts in ps_graph/.
 graph: all
-	./ps_graph/ps_graph
-	python3 ps_graph/ps_plot.py
-	python3 ps_graph/ps_bigo.py
-	python3 ps_graph/ps_adapt.py
-	python3 ps_graph/ps_audit.py
+	mkdir -p out
+	cd out && ../ps_graph/ps_graph && python3 ../ps_graph/ps_plot.py \
+		&& python3 ../ps_graph/ps_bigo.py && python3 ../ps_graph/ps_audit.py
 
 clean:
 	$(MAKE) -C ps_input clean
 	$(MAKE) -C ps_check clean
-	rm -f ps_graph/ps_graph ps_graph/ps_graph_data.txt
+	rm -f ps_graph/ps_graph
+	rm -rf out
 
 fclean: clean
 	$(MAKE) -C ps_input fclean
