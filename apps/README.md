@@ -1,26 +1,16 @@
 # apps
 
-Two browser tools to watch push_swap sort, step by step.
+2 browser tools: 1 - a simulator, to help you mentally test your code
+ideas, and 2 - a sort visualizer to watch your actual code sorting the
+stack, as fast or slow as you want.
 
-## simulator
+## Commands
 
-Click through ops by hand. No setup needed:
+| Command | Does |
+|---|---|
+| `open apps/simulator/index.html` | opens the simulator, no setup needed |
+| `make push_swap input` | builds what the visualizer needs (run from the toolkit root, if not built yet) |
+| `python3 apps/visualizer/server.py` | starts the visualizer at `http://localhost:8910/` |
 
-```
-open apps/simulator/index.html
-```
-
-## visualizer
-
-Generates a stack, runs push_swap, and replays the moves with play/pause,
-step, zoom, and an algorithm-comparison view.
-
-```
-make push_swap input          # from the toolkit root, if not built yet
-python3 apps/visualizer/server.py
-```
-
-Open `http://localhost:8910/`.
-
-Keeping the toolkit outside your push_swap folder? Run it with
+Keeping the toolkit outside your push_swap folder? Run the visualizer with
 `PUSH_SWAP_PATH=/path/to/push_swap python3 apps/visualizer/server.py`.

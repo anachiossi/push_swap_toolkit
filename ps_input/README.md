@@ -1,7 +1,8 @@
 # ps_input
 
-Generates a random stack of numbers with a chosen size and disorder level,
-and prints it ready to feed into push_swap.
+Generates the complete input for push_swap: a number list with a target
+disorder and size, with or without flags. Numbers can be random, from
+INT_MIN to INT_MAX (value), or start always from 0 (rank).
 
 ## Build
 
@@ -11,40 +12,34 @@ make
 
 (or `make input` from the toolkit root)
 
-## Interactive mode
+## Modes
 
-```
-./ps_input
-```
+| Mode | How |
+|---|---|
+| Interactive | `./ps_input`, answers 4 questions |
+| Auto (for scripts) | `./ps_input <size> <disorder> <level> <bench> <use_rank>` |
 
-Answers 4 questions: size, disorder (0.0=sorted, 1.0=reversed), algorithm
-(0=adaptive 1=simple 2=medium 3=complex), bench tag (y/n), output as ranks
-or values (r/v). Prints something like:
-
-```
---simple --bench 3 5 1 4 2
-```
-
-Use it like this:
-
-```
-./push_swap --simple 3 5 1 4 2
-./push_swap --simple 3 5 1 4 2 | wc -l   # count operations
-```
-
-## Auto mode (no prompts, for scripts)
-
-```
-./ps_input <size> <disorder> <level> <bench:y/n> <use_rank:r/v>
-```
-
-Example:
+Interactive asks: size, disorder (0.0=sorted, 1.0=reversed), algorithm
+(0=adaptive 1=simple 2=medium 3=complex), bench tag (y/n), rank or value
+(r/v). Auto mode takes the same answers as arguments, in the same order,
+e.g.:
 
 ```
 ./ps_input 340 0.5 3 n r
 ```
 
 This is what `ps_graph` uses internally.
+
+Output (just the flags + array, ready to paste after `./push_swap`):
+
+```
+--simple --bench 3 5 1 4 2
+```
+
+```
+./push_swap --simple 3 5 1 4 2
+./push_swap --simple 3 5 1 4 2 | wc -l   # count operations
+```
 
 ## Disorder
 
@@ -53,7 +48,7 @@ random, 1.0 = fully reversed.
 
 ## Notes
 
-- With very small arrays (n=3), exact disorder values like 0.5 aren't
-  reachable — you get the closest one.
-- Max size is 10000. Not a hard limit, just slow (selection sort at
-  n=10000 takes ~25 min).
+- Very small arrays (n=3) can't hit every exact disorder value — you get
+  the closest one.
+- Max size is 10000, just because of time, not a hard limit. Selection
+  sort at n=10000 takes ~25 min.

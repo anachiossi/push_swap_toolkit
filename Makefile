@@ -5,9 +5,9 @@ PUSH_SWAP_PATH	?= ..
 PUSH_SWAP		:= $(PUSH_SWAP_PATH)/push_swap
 PS_INPUT		:= $(CURDIR)/ps_input/ps_input
 
-.PHONY: all push_swap input check graph run-graph clean fclean re
+.PHONY: all push_swap input check graphtpl graph clean fclean re
 
-all: push_swap input check graph
+all: push_swap input check graphtpl
 
 # Rebuilds your push_swap project (binary + push_swap.a) from its own
 # Makefile -- every student's push_swap.h differs, so this can't be
@@ -34,15 +34,18 @@ check: push_swap
 	cp $(PUSH_SWAP_PATH)/push_swap.h ps_check/inc/push_swap.h
 	$(MAKE) -C ps_check
 
-graph: push_swap
+# Just templates the ps_graph script -- build step, no run, kept out of
+# `make all` because the actual sweep below is the slow part.
+graphtpl: push_swap
 	$(MAKE) -C ps_graph PUSH_SWAP=$(PUSH_SWAP) PS_GEN=$(PS_INPUT)
 
-# Runs the benchmark sweep + plots (separate from `all` since it's slow).
-run-graph: all
+# Runs the benchmark sweep + plots.
+graph: all
 	./ps_graph/ps_graph
 	python3 ps_graph/ps_plot.py
 	python3 ps_graph/ps_bigo.py
 	python3 ps_graph/ps_adapt.py
+	python3 ps_graph/ps_audit.py
 
 clean:
 	$(MAKE) -C ps_input clean
