@@ -45,6 +45,10 @@ One `make` from the toolkit root builds everything: your push_swap project
   dispatcher actually picks the winner).
 - **`config.py`** — single source of truth for `ps_graph`'s sweep grid
   (sizes, disorder levels, algorithms, run count).
+- **[`apps/`](apps/README.md)** — two browser tools: a manual click-through
+  stack simulator, and a `ps_input`-fed visualizer that replays push_swap's
+  op list move-by-move (play/step/scrub/zoom, plus a side-by-side
+  algorithm-comparison mode).
 
 `ps_input` and `ps_check`'s actual logic (`src/*.c` in each) is the
 student's own code, on the same footing as push_swap.c itself — not

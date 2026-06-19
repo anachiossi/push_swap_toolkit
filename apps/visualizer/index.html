@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>push_swap — visualizer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+	<h1>push_swap visualizer</h1>
+	<form id="gen-form">
+		<label>size <input id="f-size" type="number" min="1" max="500" value="500"></label>
+		<label>disorder <input id="f-disorder" type="number" min="0" max="1" step="0.01" value="0.99"></label>
+		<label>level
+			<select id="f-level">
+				<option value="adaptive">adaptive</option>
+				<option value="simple">simple</option>
+				<option value="medium">medium</option>
+				<option value="complex">complex</option>
+			</select>
+		</label>
+		<button type="submit">Generate</button>
+		<button type="button" id="compare-btn">Compare algorithms</button>
+	</form>
+	<p id="meta"></p>
+</header>
+
+<main>
+	<section class="zoom-row">
+		<label>cell size <input id="zoom" type="range" min="4" max="100" value="26"></label>
+	</section>
+
+	<section class="stack-row">
+		<h2>a</h2>
+		<div class="strip"><canvas id="stack-a"></canvas></div>
+	</section>
+	<section class="stack-row">
+		<h2>b</h2>
+		<div class="strip"><canvas id="stack-b"></canvas></div>
+	</section>
+
+	<section class="controls">
+		<button id="step-back">⏮ step</button>
+		<button id="play-pause">▶ play</button>
+		<button id="step-fwd">step ⏭</button>
+		<button id="replay-btn">⟲ replay</button>
+		<input id="scrub" type="range" min="0" max="0" value="0">
+		<label>speed <input id="speed" type="range" min="1" max="200" value="100"></label>
+		<span id="speed-label"></span>
+		<span id="counter">0 / 0</span>
+		<span id="current-op"></span>
+	</section>
+
+	<section class="ops-row">
+		<h2>operations</h2>
+		<textarea id="ops-line" class="muted-scroll" readonly rows="1" wrap="off"></textarea>
+	</section>
+
+	<section id="compare-results"></section>
+</main>
+
+<script src="../shared/stack_engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

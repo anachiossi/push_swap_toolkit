@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>push_swap — manual simulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+	<h1>push_swap simulator</h1>
+	<div class="load-row">
+		<input id="input-stack" type="text" placeholder="e.g. 5 4 3 2 1" autocomplete="off">
+		<button id="load-btn">Load</button>
+		<button id="random-btn">Random</button>
+	</div>
+</header>
+
+<main>
+	<section class="stacks">
+		<div class="stack-col">
+			<h2>a</h2>
+			<div id="stack-a" class="stack"></div>
+		</div>
+		<div class="stack-col">
+			<h2>b</h2>
+			<div id="stack-b" class="stack"></div>
+		</div>
+	</section>
+
+	<section class="toolbar">
+		<button class="op" data-op="sa" data-cat="swap" data-side="a">sa</button>
+		<button class="op" data-op="sb" data-cat="swap" data-side="b">sb</button>
+		<button class="op" data-op="ss" data-cat="swap" data-side="both">ss</button>
+		<button class="op" data-op="pa" data-cat="push" data-side="a">pa</button>
+		<button class="op" data-op="pb" data-cat="push" data-side="b">pb</button>
+		<button class="op" data-op="ra" data-cat="rotate" data-side="a">ra</button>
+		<button class="op" data-op="rb" data-cat="rotate" data-side="b">rb</button>
+		<button class="op" data-op="rr" data-cat="rotate" data-side="both">rr</button>
+		<button class="op" data-op="rra" data-cat="rrotate" data-side="a">rra</button>
+		<button class="op" data-op="rrb" data-cat="rrotate" data-side="b">rrb</button>
+		<button class="op" data-op="rrr" data-cat="rrotate" data-side="both">rrr</button>
+		<button id="undo-btn" disabled>Undo</button>
+	</section>
+
+	<section class="log-section">
+		<h2>operations <span id="status"></span></h2>
+		<ol id="log"></ol>
+	</section>
+</main>
+
+<script src="../shared/stack_engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
