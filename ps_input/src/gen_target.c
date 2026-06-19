@@ -6,7 +6,7 @@
 /*   By: anade-mo <anade-mo <marvin@42.fr>>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/14 18:05:40 by anade-mo          #+#    #+#             */
-/*   Updated: 2026/06/19 14:00:19 by anade-mo         ###   ########.fr       */
+/*   Updated: 2026/06/19 14:12:34 by anade-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ int	get_algorithm(t_gen *g)
 	g->level = -1;
 	while (g->level == -1)
 	{
-		ft_printf("Which algorithm?\n(adaptive 0 | simple 1| medium 2| complex 3)\n");
+		ft_printf("Which algorithm?\n(adaptive 0 |"
+			" simple 1| medium 2| complex 3)\n");
 		line = get_next_line(0);
 		if (!line)
 			return (0);
@@ -83,7 +84,7 @@ int	get_bench(t_gen *g)
 	g->bench = -1;
 	while (g->bench == -1)
 	{
-		ft_printf("Do you need benchmarks? (y / n)\n");
+		ft_printf("Add tag --bench? (y / n)\n");
 		line = get_next_line(0);
 		if (!line)
 			return (0);
@@ -105,7 +106,8 @@ int	get_rank_or_value(t_gen *g)
 	g->use_rank = -1;
 	while (g->use_rank == -1)
 	{
-		ft_printf("Print rank or value?\n(r for rank (0 - n-1) | v for value (random int_min - int_max)\n");
+		ft_printf("Print rank or value?\n(r for rank (0 - n-1) |"
+			" v for value (random int_min - int_max)\n");
 		line = get_next_line(0);
 		if (!line)
 			return (0);

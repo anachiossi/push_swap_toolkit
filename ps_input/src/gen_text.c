@@ -6,7 +6,7 @@
 /*   By: anade-mo <anade-mo <marvin@42.fr>>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:18:17 by anade-mo          #+#    #+#             */
-/*   Updated: 2026/06/17 16:07:28 by anade-mo         ###   ########.fr       */
+/*   Updated: 2026/06/19 14:08:37 by anade-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	print_array(int *arr, int size)
 	ft_printf("\n");
 }
 
-void	print_benchmark(t_gen *g)
+void	print_targets(t_gen *g)
 {
 	ft_printf("size               : %d\n", g->size);
 	ft_printf("disorder target    : %.4f\n", g->dis_target);

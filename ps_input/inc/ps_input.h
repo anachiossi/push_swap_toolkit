@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ps_input.h                                           :+:      :+:    :+:   */
+/*   ps_input.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anade-mo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anade-mo <anade-mo <marvin@42.fr>>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/13 16:40:40 by anade-mo          #+#    #+#             */
-/*   Updated: 2026/06/13 20:40:45 by anade-mo         ###   ########.fr       */
+/*   Created: 2026/06/19 14:11:16 by anade-mo          #+#    #+#             */
+/*   Updated: 2026/06/19 14:11:26 by anade-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ float		calc_disorder(t_gen *g);
 int			gen_value(t_gen *g);
 
 /* gen_text.c */
-void		print_benchmark(t_gen *g);
+void		print_targets(t_gen *g);
 void		print_input(t_gen *g);
 
 /*main.c*/
