@@ -39,11 +39,12 @@ for size in "${SIZES[@]}"; do
 				[ -z "$nums" ] && continue
 
 				t_start=$(date +%s%N)
-				bench_out=$(echo $nums | xargs "$PUSH_SWAP" "--${algo_name}" "--bench" 2>/dev/null)
+				ops_out=$(echo $nums | xargs "$PUSH_SWAP" "--${algo_name}" 2>/dev/null)
+				status=$?
 				t_end=$(date +%s%N)
 
-				ops=$(echo "$bench_out" | grep "\[bench\] total ops:" | awk '{print $NF}')
-				[ -z "$ops" ] && continue
+				[ "$status" -ne 0 ] && continue
+				ops=$(echo -n "$ops_out" | grep -c '^')
 
 				ops_sum=$(( ops_sum + ops ))
 				ms_sum=$(( ms_sum + (t_end - t_start) / 1000000 ))
