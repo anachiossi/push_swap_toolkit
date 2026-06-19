@@ -17,6 +17,9 @@ check-vars:
 		echo "Usage: make PUSH_SWAP=/path/to/your/push_swap"; exit 1; \
 	fi
 
+# Always regenerated: the baked-in paths come from make variables
+# (PUSH_SWAP/PS_GEN), not the .tpl, so gating on the template alone would
+# keep a stale binary path whenever only the variable changes.
 ps_graph: ps_graph.tpl
 	sed $(SED_FLAGS) $< > $@
 	chmod +x $@
@@ -26,4 +29,4 @@ clean:
 
 re: clean all
 
-.PHONY: all clean re check-vars
+.PHONY: all clean re check-vars ps_graph
