@@ -42,6 +42,13 @@ pip install -r requirements.txt
 
 `ps_input` and `ps_check` are made by me. The apps and ps_graph are still new territory for me, so I got help from Claude as a guide.  
 
+`ps_input` and `ps_check` link against my own committed `push_swap.a`/
+`libft.a` (in their `lib/` folders) — that's fixed and the same for
+everyone who clones this repo, never swapped for yours. Their C source
+calls specific function names that can vary from student to student, so
+mixing in someone else's would just break the build. `make graph` and
+`apps/visualizer` are the only things that run *your actual* push_swap.
+
 ## Commands
 
 | Command | Does |

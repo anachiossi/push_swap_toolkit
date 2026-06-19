@@ -9,29 +9,20 @@ PS_INPUT		:= $(CURDIR)/ps_input/ps_input
 
 all: push_swap input check graphtpl
 
-# Rebuilds your push_swap project (binary + push_swap.a) from its own
-# Makefile -- every student's push_swap.h differs, so this can't be
-# skipped or vendored once and reused.
+# Rebuilds your push_swap project's actual binary, needed to run real
+# benchmarks/visualizations against it (see graph and apps/visualizer).
 push_swap:
 	$(MAKE) -C $(PUSH_SWAP_PATH)
-	$(MAKE) -C $(PUSH_SWAP_PATH) push_swap.a
 
-# libft.a/libft.h are never built by any Makefile here -- they're given,
-# copied as-is from wherever you keep your own libft inside your push_swap
-# project (every student's libft differs just like push_swap.h does, so a
-# committed generic copy would silently link the wrong one for anyone else
-# cloning this repo).
-input: push_swap
-	cp $(PUSH_SWAP_PATH)/libft.a ps_input/lib/libft.a
-	cp $(PUSH_SWAP_PATH)/libft.h ps_input/inc/libft.h
+# ps_input and ps_check link against a fixed, committed push_swap.a/libft.a
+# (mine) -- never copied from whoever cloned this repo. Their C source
+# calls specific function names/signatures (s, p, r, is_sorted, ft_atoi,
+# get_next_line, ...) that can vary from student to student, so swapping
+# in an arbitrary push_swap/libft here would just break the build.
+input:
 	$(MAKE) -C ps_input
 
-# Refreshes ps_check's lib/inc copies from your just-built push_swap project,
-# then builds ps_check against them.
-check: push_swap
-	cp $(PUSH_SWAP_PATH)/push_swap.a ps_check/lib/push_swap.a
-	cp $(PUSH_SWAP_PATH)/libft.a ps_check/lib/libft.a
-	cp $(PUSH_SWAP_PATH)/push_swap.h ps_check/inc/push_swap.h
+check:
 	$(MAKE) -C ps_check
 
 # Just templates the ps_graph script -- build step, no run, kept out of

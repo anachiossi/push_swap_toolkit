@@ -11,9 +11,13 @@ real push_swap instead of recompiling it.
 make
 ```
 
-(or `make check` from the toolkit root — also refreshes `push_swap.a` /
-`libft.a` / `push_swap.h` in `lib/`/`inc/` from your project, so it always
-matches what you just built)
+(or `make check` from the toolkit root)
+
+Links against the `push_swap.a`/`libft.a`/`push_swap.h` committed in
+`lib/`/`inc/` — mine, fixed, the same for everyone who clones this repo.
+It's never swapped for your own push_swap: the checker's C calls specific
+function names/signatures that can vary from student to student, so
+mixing in someone else's would just break the build.
 
 ## Commands
 
