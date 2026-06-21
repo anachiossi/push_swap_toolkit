@@ -1,3 +1,5 @@
+*This project has been created as part of the 42 curriculum by anade-mo.*
+
 # ps_input
 
 Generates the complete input for push_swap: a number list with a target

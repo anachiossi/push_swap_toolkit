@@ -1,3 +1,5 @@
+*This project has been created as part of the 42 curriculum by anade-mo.*
+
 # ps_graph
 
 Executes a comprehensive sweep (runs push_swap several times for each size

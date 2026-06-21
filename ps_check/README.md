@@ -1,3 +1,5 @@
+*This project has been created as part of the 42 curriculum by anade-mo.*
+
 # ps_check
 
 Checks if push_swap's output actually sorts the stack. It needs the same

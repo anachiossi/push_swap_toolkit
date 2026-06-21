@@ -1,3 +1,5 @@
+*This project has been created as part of the 42 curriculum by anade-mo.*
+
 # push_swap_toolkit
 
 Tools for testing and visualizing your push_swap project.

@@ -1,3 +1,5 @@
+*This project has been created as part of the 42 curriculum by anade-mo.*
+
 # apps
 
 2 browser tools: 1 - a simulator, to help you mentally test your code
