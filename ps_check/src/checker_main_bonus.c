@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   checker_main_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anade-mo <anade-mo <marvin@42.fr>>         +#+  +:+       +#+        */
+/*   By: anade-mo <anade-mo@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/17 12:59:08 by anade-mo          #+#    #+#             */
-/*   Updated: 2026/06/19 12:45:42 by anade-mo         ###   ########.fr       */
+/*   Updated: 2026/06/21 23:42:28 by anade-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ps_check.h"
 
-int		main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_stack		*a;
 	t_stack		*b;

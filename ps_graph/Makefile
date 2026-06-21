@@ -5,10 +5,12 @@
 
 PUSH_SWAP	?=
 PS_GEN		?= $(abspath ../ps_input/ps_input)
+PS_CHECK	?= $(abspath ../ps_check/ps_check)
 
 SED_FLAGS = \
 	-e 's|__PUSH_SWAP__|$(PUSH_SWAP)|g' \
-	-e 's|__PS_GEN__|$(PS_GEN)|g'
+	-e 's|__PS_GEN__|$(PS_GEN)|g' \
+	-e 's|__PS_CHECK__|$(PS_CHECK)|g'
 
 all: check-vars ps_graph
 
