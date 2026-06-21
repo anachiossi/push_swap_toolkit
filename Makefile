@@ -5,6 +5,9 @@
 PUSH_SWAP_PATH	?= /home/anachiossi/42/cursus/push_swap
 PUSH_SWAP		:= $(PUSH_SWAP_PATH)/push_swap
 PS_INPUT		:= $(CURDIR)/ps_input/ps_input
+# Generated output (data file, pngs, bigo.txt) lands one level up from the
+# toolkit -- inside your push_swap project, at the same level as push_swap_toolkit.
+OUT				:= $(abspath $(CURDIR)/../out)
 
 .PHONY: all push_swap input check graphtpl graph clean fclean re
 
@@ -24,18 +27,21 @@ check:
 graphtpl: push_swap
 	$(MAKE) -C ps_graph PUSH_SWAP=$(PUSH_SWAP) PS_GEN=$(PS_INPUT)
 
-# Runs the benchmark sweep + plots. Everything generated (data file, pngs,
-# bigo.txt) lands in out/, kept separate from the source/scripts in ps_graph/.
+# Runs the benchmark sweep + plots. Everything generated lands in $(OUT) -- one
+# level up, inside the push_swap project, kept out of the toolkit repo entirely.
+# Scripts are called by absolute path so the cd into $(OUT) doesn't break them.
 graph: all
-	mkdir -p out
-	cd out && ../ps_graph/ps_graph && python3 ../ps_graph/ps_plot.py \
-		&& python3 ../ps_graph/ps_bigo.py && python3 ../ps_graph/ps_audit.py
+	mkdir -p $(OUT)
+	cd $(OUT) && $(CURDIR)/ps_graph/ps_graph \
+		&& python3 $(CURDIR)/ps_graph/ps_plot.py \
+		&& python3 $(CURDIR)/ps_graph/ps_bigo.py \
+		&& python3 $(CURDIR)/ps_graph/ps_audit.py
 
 clean:
 	$(MAKE) -C ps_input clean
 	$(MAKE) -C ps_check clean
 	rm -f ps_graph/ps_graph
-	rm -rf out
+	rm -rf $(OUT)
 
 fclean: clean
 	$(MAKE) -C ps_input fclean
