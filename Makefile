@@ -2,7 +2,7 @@
 # EDIT THIS LINE to point at your project. 
 # If you keep this toolkit inside your push_swap project, set "..".
 # Or set the absolute path to the push_swap project folder.
-PUSH_SWAP_PATH	?= /home/anachiossi/42/cursus/push_swap
+PUSH_SWAP_PATH	?= ..
 PUSH_SWAP		:= $(PUSH_SWAP_PATH)/push_swap
 PS_INPUT		:= $(CURDIR)/ps_input/ps_input
 # Generated output (data file, pngs, bigo.txt) lands one level up from the
