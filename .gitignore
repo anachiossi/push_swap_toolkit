@@ -3,5 +3,5 @@ ps_input/ps_input
 ps_check/obj/
 ps_check/ps_check
 ps_graph/ps_graph
-# out/   # temporarily un-ignored to track the generated output files (graphs/data); restore this line afterwards
+out/
 __pycache__/
