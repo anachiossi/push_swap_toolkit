@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gen_main.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anade-mo <anade-mo <marvin@42.fr>>         +#+  +:+       +#+        */
+/*   By: anade-mo <anade-mo@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/14 18:58:42 by anade-mo          #+#    #+#             */
-/*   Updated: 2026/06/19 14:10:02 by anade-mo         ###   ########.fr       */
+/*   Updated: 2026/06/22 00:10:43 by anade-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,29 +47,36 @@ int	init_targets_auto(t_gen *g, char **argv)
 	return (1);
 }
 
-int	main(int argc, char **argv)
+static int	gen_setup(t_gen *g, int argc, char **argv)
 {
-	t_gen	g;
-
 	if (argc != 1 && argc != 6)
 	{
 		ft_printf("Usage: ps_gen [size(0-10000) | disorder(0.0-1.0) "
 			"| level(0-3) | bench(y/n) | use_rank(r/v)]\n");
-		return (1);
+		return (0);
 	}
 	srand(time(NULL) ^ (unsigned int)getpid());
 	if (argc == 1)
 	{
 		ft_printf("Push Swap input generator\n");
-		if (!init_targets(&g))
-			return (1);
+		if (!init_targets(g))
+			return (0);
 	}
-	else if (!init_targets_auto(&g, argv))
+	else if (!init_targets_auto(g, argv))
 	{
 		ft_printf("Usage: ps_gen [size(0-10000) | disorder(0.0-1.0) "
 			"| level(0-3) | bench(y/n) | use_rank(r/v)]\n");
-		return (1);
+		return (0);
 	}
+	return (1);
+}
+
+int	main(int argc, char **argv)
+{
+	t_gen	g;
+
+	if (!gen_setup(&g, argc, argv))
+		return (1);
 	if (!gen_rank(&g))
 		return (1);
 	if (!gen_value(&g))
