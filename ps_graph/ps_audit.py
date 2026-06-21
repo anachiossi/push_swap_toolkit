@@ -13,11 +13,14 @@ worse, the cell is RED and labelled with the algorithm it should have used.
 
 Caveat: adaptive and the base algos are averaged over DIFFERENT random inputs
 per point, so a tolerance (10%) is applied — only gaps beyond sampling noise
-are flagged red. (When adaptive routes to selection for n<=100, its value and
+are flagged red. (When adaptive routes to simple for n<=100, its value and
 simple's value are the same algorithm on different draws, so they wobble a
 little; the tolerance absorbs that.)
 
-Outputs ps_audit.png and a text report of the zones to change.
+Outputs ps_audit.png and a text report:
+  1. zones where adaptive is suboptimal (with the algorithm it should use)
+  2. STRATEGY MAP — cheapest algorithm per size, by disorder range
+  3. WINNER BY DISORDER — best algorithm at each disorder, tallied over sizes
 Run:  python3 ps_audit.py
 """
 
@@ -89,105 +92,96 @@ fig.colorbar(im, ax=ax, label='ops over best (fraction, 0 = optimal)')
 plt.tight_layout()
 plt.savefig('ps_audit.png', dpi=150)
 
-# ---- report ----
+# ---- report 1: where adaptive is leaving ops on the table ----
 checked = int(np.isfinite(gap).sum())
 print()
-print("  ps_audit  |  adaptive vs best available strategy")
-print("  " + "=" * 50)
-print(f"  points checked: {checked}    suboptimal: {len(zones)}   (tol {int(TOL * 100)}%)")
+print("  1) ADAPTIVE CHECK  |  is the dispatcher already picking the best?")
+print("  " + "=" * 64)
+print(f"     points checked: {checked}    suboptimal: {len(zones)}   (tol {int(TOL * 100)}%)")
 if not zones:
-    print("  adaptive picks the best everywhere ✓")
+    print("     adaptive picks the best everywhere ✓")
 else:
-    print(f"\n  {'size':>5} {'disord':>7} {'adaptive':>9} {'best':>8} {'use':>9}   waste")
-    print("  " + "-" * 54)
+    print("     below: points where adaptive is clearly beaten, and by which algo")
+    print(f"\n     {'size':>5} {'disord':>7} {'adaptive':>9} {'best':>8} {'should use':>11}   waste")
+    print("     " + "-" * 60)
     for n, d, adp, best, a in zones:
-        print(f"  {n:>5} {d:>7.2f} {int(adp):>9} {int(best):>8} {a:>9}"
+        print(f"     {n:>5} {d:>7.2f} {int(adp):>9} {int(best):>8} {a:>11}"
               f"   +{int(adp - best)} ({(adp / best - 1) * 100:.0f}%)")
 print()
 
 
-# ---- ideal selection/radix thresholds per size (straight from the data) ----
-# selection wins at the disorder extremes; this finds, for each size, how far
-# in those extremes reach. 't' is the value to use in the dispatcher's rule
-# "selection if (d < t || d > 1 - t) else radix".
-step = float(np.min(np.diff(disorders))) if len(disorders) > 1 else 0.05
+# ---- helper: cheapest base algorithm at one (size, disorder) point ----
+# Two algorithms within SPLIT_TOL of each other are treated as a tie (so run-to-
+# run noise doesn't flip the winner), and the tie is broken toward the simpler
+# algorithm. Trivial all-sorted points (best == 0) report no winner.
+SPLIT_TOL = 0.03
+NAME_ORDER = {'simple': 0, 'medium': 1, 'complex': 2}
 
 
-def selection_band(n):
-    lo = None
-    for d in disorders:
-        s, c = ops.get((n, d, 'simple')), ops.get((n, d, 'complex'))
-        if s is not None and c is not None and s <= c:
-            lo = d
-        else:
-            break
-    hi = None
-    for d in reversed(disorders):
-        s, c = ops.get((n, d, 'simple')), ops.get((n, d, 'complex'))
-        if s is not None and c is not None and s <= c:
-            hi = d
-        else:
-            break
-    return lo, hi
-
-
-print("  ideal selection/radix split per size  (from simple-vs-complex crossover)")
-print(f"  {'n':>5}   {'selection wins':>24}   {'dispatcher t':>12}")
-print("  " + "-" * 50)
-for n in sizes:
-    if ops.get((n, disorders[0], 'simple')) is None:
-        continue
-    lo, hi = selection_band(n)
-    if lo is not None and hi is not None and lo >= hi:
-        print(f"  {n:>5}   {'all disorders':>24}   {'-> simple':>12}")
-    elif lo is None and hi is None:
-        print(f"  {n:>5}   {'none':>24}   {'-> radix':>12}")
-    else:
-        desc = "  or  ".join(x for x in
-                             [f"d<={lo:.2f}" if lo is not None else "",
-                              f"d>={hi:.2f}" if hi is not None else ""] if x)
-        cand = ([lo + step] if lo is not None else []) \
-            + ([1 - hi + step] if hi is not None else [])
-        print(f"  {n:>5}   {desc:>24}   t={round(max(cand), 2):.2f}")
-print()
-
-
-# ---- absolute winners (which base algorithm wins outright) ----
-def best_base_at(n, d):
+def winner_at(n, d):
     cand = {}
     for a in bases:
         v = ops.get((n, d, a))
         if v is not None and (v > 0 or n == 1 or d == 0):
             cand[a] = v
-    return min(cand, key=cand.get) if cand else None
+    if not cand:
+        return None
+    best = min(cand.values())
+    if best <= 0:
+        return None
+    tied = [a for a, v in cand.items() if (v - best) / best <= SPLIT_TOL]
+    return min(tied, key=lambda a: NAME_ORDER.get(a, 9))
 
 
-def tally_str(tally):
-    total = sum(tally.values())
-    return ",  ".join(f"{a} {c}/{total}"
-                      for a, c in sorted(tally.items(), key=lambda x: -x[1]))
-
-
-print("  absolute winner per size  (base algo winning the most disorders)")
-print("  " + "-" * 50)
-for n in sizes:
-    tally = {}
+# ---- report 2: strategy map (what the dispatcher SHOULD route to) ----
+# For each size we walk disorder low->high and group consecutive points by their
+# cheapest algorithm, giving contiguous "use ALGO while disorder is in d lo-hi"
+# bands. This is the raw material for writing the dispatcher's rules.
+def segments(n):
+    runs = []
     for d in disorders:
-        w = best_base_at(n, d)
-        if w:
-            tally[w] = tally.get(w, 0) + 1
-    if tally:
-        print(f"  n={n:>5} :  {tally_str(tally)}")
+        w = winner_at(n, d)
+        if w is None:
+            continue
+        if runs and runs[-1][0] == w:
+            runs[-1][2] = d
+        else:
+            runs.append([w, d, d])
+    return runs
+
+
+print("  2) STRATEGY MAP  |  cheapest algorithm per size, by disorder range")
+print("  " + "=" * 64)
+print(f"     read as: at this size, use ALGO while disorder is in that range")
+print(f"     (ties within {int(SPLIT_TOL * 100)}% folded together)")
+print("     " + "-" * 60)
+for n in sizes:
+    runs = segments(n)
+    if not runs:
+        continue
+    parts = []
+    for algo, lo, hi in runs:
+        rng = f"d={lo:.2f}" if lo == hi else f"d {lo:.2f}-{hi:.2f}"
+        parts.append(f"{algo} ({rng})")
+    print(f"     n={n:>5} :  " + "   ".join(parts))
 print()
 
-print("  absolute winner per disorder  (base algo winning the most sizes)")
-print("  " + "-" * 50)
+
+# ---- report 3: winner by disorder, tallied across all sizes ----
+print("  3) WINNER BY DISORDER  |  best algorithm at each disorder, over all sizes")
+print("  " + "=" * 64)
+print("     each row: how many of the tested sizes each algorithm wins at that disorder")
+print("     " + "-" * 60)
 for d in disorders:
     tally = {}
     for n in sizes:
-        w = best_base_at(n, d)
+        w = winner_at(n, d)
         if w:
             tally[w] = tally.get(w, 0) + 1
-    if tally:
-        print(f"  d={d:>5.2f} :  {tally_str(tally)}")
+    if not tally:
+        continue
+    total = sum(tally.values())
+    summary = ",  ".join(f"{a} {c}/{total}"
+                         for a, c in sorted(tally.items(), key=lambda x: -x[1]))
+    print(f"     d={d:>5.2f} :  {summary}")
 print()
