@@ -1,7 +1,8 @@
-# Default assumes this repo is cloned *inside* your push_swap project root,
-# so ../ is the push_swap project. Override if you keep it elsewhere:
-#   make PUSH_SWAP_PATH=/path/to/your/push_swap
-PUSH_SWAP_PATH	?= ..
+# Path to your push_swap project (the folder with its Makefile + binary).
+# EDIT THIS LINE to point at your project. 
+# If you keep this toolkit inside your push_swap project, set "..".
+# Or set the absolute path to the push_swap project folder.
+PUSH_SWAP_PATH	?= /home/anachiossi/42/cursus/push_swap
 PUSH_SWAP		:= $(PUSH_SWAP_PATH)/push_swap
 PS_INPUT		:= $(CURDIR)/ps_input/ps_input
 
@@ -9,16 +10,9 @@ PS_INPUT		:= $(CURDIR)/ps_input/ps_input
 
 all: push_swap input check graphtpl
 
-# Rebuilds your push_swap project's actual binary, needed to run real
-# benchmarks/visualizations against it (see graph and apps/visualizer).
 push_swap:
 	$(MAKE) -C $(PUSH_SWAP_PATH)
 
-# ps_input and ps_check link against a fixed, committed push_swap.a/libft.a
-# (mine) -- never copied from whoever cloned this repo. Their C source
-# calls specific function names/signatures (s, p, r, is_sorted, ft_atoi,
-# get_next_line, ...) that can vary from student to student, so swapping
-# in an arbitrary push_swap/libft here would just break the build.
 input:
 	$(MAKE) -C ps_input
 

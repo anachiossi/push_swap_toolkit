@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Prints config.py's sweep grid as bash array assignments, so ps_graph.tpl
-can `eval` it instead of keeping a second, hand-maintained copy."""
+"""Reads the sweep settings from config.py and prints them as bash variables.
+The ps_graph script runs this and uses the result, so the settings live in one
+place (config.py) instead of being copied into two files you'd have to update
+by hand."""
 
 import sys
 from pathlib import Path
