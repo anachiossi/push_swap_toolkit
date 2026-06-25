@@ -1,5 +1,13 @@
+import sys
+from pathlib import Path
+
 import pandas as pd
 import matplotlib.pyplot as plt
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from config import CROSSOVER_PAIR
+
+LO, HI = CROSSOVER_PAIR  # the two algorithms whose crossover we annotate
 
 df = pd.read_csv('ps_graph_data.txt', sep='\t')
 ops_df = df  # adaptive now shown everywhere (it should trace the best-of envelope)
@@ -12,11 +20,11 @@ def mark_disorder_crossovers(ax, n):
         ax.plot(g['disorder'], g['ops_avg'], marker='o', label=algo)
         series[algo] = g.set_index('disorder')['ops_avg']
 
-    if 'simple' not in series or 'complex' not in series:
+    if LO not in series or HI not in series:
         return
 
-    diff = series['simple'] - series['complex']
-    ymax = max(series['simple'].max(), series['complex'].max())
+    diff = series[LO] - series[HI]
+    ymax = max(series[LO].max(), series[HI].max())
     for i in range(len(diff) - 1):
         if diff.iloc[i] * diff.iloc[i + 1] < 0:
             x1, x2 = diff.index[i], diff.index[i + 1]
@@ -60,16 +68,17 @@ for algo, g in sub.groupby('algorithm'):
     ax1.plot(g['size'], g['ops_avg'], marker='o', label=algo)
     series[algo] = g.set_index('size')['ops_avg']
 
-diff = series['simple'] - series['complex']
-for i in range(len(diff) - 1):
-    if diff.iloc[i] * diff.iloc[i + 1] < 0:
-        x1, x2 = diff.index[i], diff.index[i + 1]
-        cx = x1 - diff.iloc[i] * (x2 - x1) / (diff.iloc[i + 1] - diff.iloc[i])
-        cy = series['complex'].iloc[i] + (series['complex'].iloc[i + 1] - series['complex'].iloc[i]) * (cx - x1) / (x2 - x1)
-        ax1.annotate(f'crossover n≈{cx:.0f}', xy=(cx, cy), xytext=(cx + 80, cy + 8000),
-                     arrowprops=dict(arrowstyle='->', color='gray'), fontsize=8, color='gray')
-        ax1.axvline(cx, color='gray', linestyle='--', linewidth=0.8)
-        break
+if LO in series and HI in series:
+    diff = series[LO] - series[HI]
+    for i in range(len(diff) - 1):
+        if diff.iloc[i] * diff.iloc[i + 1] < 0:
+            x1, x2 = diff.index[i], diff.index[i + 1]
+            cx = x1 - diff.iloc[i] * (x2 - x1) / (diff.iloc[i + 1] - diff.iloc[i])
+            cy = series[HI].iloc[i] + (series[HI].iloc[i + 1] - series[HI].iloc[i]) * (cx - x1) / (x2 - x1)
+            ax1.annotate(f'crossover n≈{cx:.0f}', xy=(cx, cy), xytext=(cx + 80, cy + 8000),
+                         arrowprops=dict(arrowstyle='->', color='gray'), fontsize=8, color='gray')
+            ax1.axvline(cx, color='gray', linestyle='--', linewidth=0.8)
+            break
 
 sizes = sorted(sub['size'].unique())
 ax1.set_xticks(sizes)
